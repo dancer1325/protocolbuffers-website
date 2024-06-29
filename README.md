@@ -5,11 +5,12 @@ Copyright 2008 Google Inc.
 https://protobuf.dev
 
 ## Overview
-* := Mechanism /
+* := Mechanism of interchange format /
   * characteristics
     * owned by Google
     * language-neutral
     * platform-neutral
+      * == 👁️ NOT tied to any RPC implementation or protocol 👁️
     * extensible
   * allows 
     * serializing structured data
