@@ -7,8 +7,10 @@ description = "Each tutorial in this section shows you how to implement a simple
 type = "docs"
 +++
 
-The complete sample code for each application is also provided.
-
-The tutorials don't assume that you know anything about protocol buffers, but do
-assume that you are comfortable writing code in your chosen language, including
-using file I/O.
+* Goal
+  * implement a simple application / use protocol buffers | several program languages
+    * to show
+      * protocol buffer API
+      * how to create & use '.proto'
+    * requirements
+      * file I/O | your chosen language
