@@ -11,9 +11,12 @@ https://protobuf.dev
     * language-neutral
     * platform-neutral
       * == 👁️ NOT tied to any RPC implementation or protocol 👁️
-    * extensible
+    * extensible / without
+      * invalidating existing data OR
+      * requiring to update the code 
   * allows 
-    * serializing structured data
+    * serializing structured data / <= 1MB
+      * -> data can be loaded into memory at 1! time
 
 ## Protocol Buffers Repository
 
