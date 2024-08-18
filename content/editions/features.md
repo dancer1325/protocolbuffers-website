@@ -5,28 +5,24 @@ description = "Protobuf Editions features and how they affect protobuf behavior.
 type = "docs"
 +++
 
-This topic provides an overview of the features that are included in Edition
-2023. Each subsequent edition's features will be added to this topic. We
-announce new editions in [the News section](/news).
+* goal
+  * features / included | Edition 2023
+    * Each subsequent edition's features -- will be added 
 
 ## Prototiller {#prototiller}
 
-Prototiller is a command-line tool that converts proto2 and proto3 definition
-files to Editions syntax. It hasn't been released yet, but is referenced
-throughout this topic.
+* := CL tool / proto2 and proto3 definition -- are converted to -- files | Editions syntax
+  * NOT released yet
 
 ## Features {#features}
 
-The following sections include all of the behaviors that are configurable using
-features in Edition 2023. [Preserving proto2 or proto3 Behavior](#preserving)
-shows how to override the default behaviors so that your proto definition files
-act like proto2 or proto3 files. For more information on how Editions and
-Features work together to set behavior, see
-[Protobuf Editions Overview](/editions/overview).
-
-Each of the following sections has an entry for what scope the feature applies
-to. This can include file, enum, message, or field. The following sample shows a
-mock feature applied to each scope:
+* ALL behaviors / are configurable using features | Edition 2023
+  * entry | scope / feature applies   
+* [Preserving proto2 or proto3 Behavior](#preserving)  
+  * allows how to override the default behaviors
+    * -> your proto definition files -- act like -- proto2 or proto3 files
+    * Check [Protobuf Editions Overview](/editions/overview)
+* _Example:_ mock feature applied | each scope
 
 ```proto
 edition = "2023";
@@ -46,16 +42,14 @@ message Corge {
   // Message-scope definition
   option features.bar = QUUX;
 
-  // Field-scope definition
+  // Field-scope definition -> override message scope
   Foo A = 1 [features.bar = GRAULT];
 }
 ```
 
-In this example, the setting `GRAULT` in the field-scope feature definition
-overrides the message-scope QUUX setting.
-
 ### `features.enum_type` {#enum_type}
 
+* TODO:
 This feature sets the behavior for how enum values that aren't contained within
 the defined set are handled. See
 [Enum Behavior](/programming-guides/enum) for more
