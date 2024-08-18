@@ -49,16 +49,13 @@ message Corge {
 
 ### `features.enum_type` {#enum_type}
 
-* TODO:
-This feature sets the behavior for how enum values that aren't contained within
-the defined set are handled. See
-[Enum Behavior](/programming-guides/enum) for more
-information on open and closed enums.
-
-This feature doesn't impact proto3 files, so this section doesn't have a before
-and after of a proto3 file.
+* behavior for how enum values / are NOT contained | defined set -> are handled
+  * Check [Enum Behavior](/programming-guides/enum)
+  * NOT impact | proto3 files
 
 **Values available:**
+
+* TODO:
 
 *   `CLOSED:` Closed enums store enum values that are out of range in the
     unknown field set.
