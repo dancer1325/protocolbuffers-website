@@ -6,26 +6,30 @@ description = "An overview of the Protobuf Editions functionality."
 type = "docs"
 +++
 
-Protobuf Editions replace the proto2 and proto3 designations that we have used
-for Protocol Buffers. Instead of adding `syntax = "proto2"` or `syntax =
-"proto3"` at the top of proto definition files, you use an edition number, such
-as `edition = "2023"`, to specify the default behaviors your file will have.
-Editions enable the language to evolve incrementally over time.
-
-Instead of the hardcoded behaviors that older versions have had, editions
-represent a collection of [features](/editions/features)
-with a default value (behavior) per feature. Features are options on a file,
-message, field, enum, and so on, that specify the behavior of protoc, the code
-generators, and protobuf runtimes. You can explicitly override a behavior at
-those different levels (file, message, field, ...) when your needs don't match
-the default behavior for the edition you've selected. You can also override your
-overrides. The [section later in this topic on lexical scoping](#scoping) goes
-into more detail on that.
-
-*The latest released edition is 2023.*
+* Protobuf Editions
+  ** == collection of [features](/editions/features)
+      *** vs hardcoded behaviors / default value | older versions
+      *** == options / can be override between them (Check [lexical scoping](#scoping)) |
+          **** file
+          **** message
+          **** field
+          **** enum
+          **** ...
+      *** allows specifying the behavior of
+          **** protoc
+          **** code generators
+          **** protobuf runtimes
+  ** allows
+      *** language can evolve incrementally over time
+  ** -- replace the -- proto2 and proto3 designations
+      *** allows
+          **** 👁️ specifying the default behaviors | your file 👁️
+      *** | top of proto definition files
+          **** `syntax = "proto2"` or `syntax ="proto3"` -> `edition = "editionNumber"` (-- _Example:_ `edition = "2023"` --) 
 
 ## Lifecycle of a Feature {#lifecycles}
 
+* TODO: 
 Editions provide the fundamental increments for the lifecycle of a feature.
 Features have an expected lifecycle: introducing
 it, changing its default behavior, deprecating it, and then removing it. For
