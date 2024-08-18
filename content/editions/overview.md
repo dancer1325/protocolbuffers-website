@@ -238,20 +238,15 @@ message Person {
 
 ### Prototiller {#prototiller}
 
-* TODO:
-We provide both a migration guide and migration tooling that ease the migration
-to and between editions. The tool, called Prototiller, will enable you to:
-
-*   convert proto2 and proto3 definition files to the new editions syntax, at
-    scale
-*   migrate files from one edition to another
-*   manipulate proto files in other ways
+* := migration tooling /
+  * allows
+    * making easier the migration to and between editions
+    * manipulating ".proto" in other ways
 
 ### Backward Compatibility {#compatibility}
 
-We are building Protobuf Editions to be as minimally disruptive as possible. For
-example, you can import proto2 and proto3 definitions into editions-based
-definition files, and vice versa:
+* Protobuf Editions are minimally disruptive as possible
+  * _Example:_ proto2 and proto3 definitions <-- can be imported into -> editions-based
 
 ```proto
 // file myproject/foo.proto
@@ -270,7 +265,7 @@ edition = "2023";
 
 import "myproject/foo.proto";
 ```
-
-While the generated code changes when you move from proto2 or proto3 to
-editions, the wire format does not. You'll still be able to access proto2 and
-proto3 data files or file streams using your editions-syntax proto definitions.
+* once you migrate to another version
+  * generated code changes
+  * wire format does NOT change
+    * 👁️== using editions-syntax proto definitions -- you can access -- proto2 and proto3 data files or file streams 👁️
