@@ -27,69 +27,38 @@ type = "docs"
       * | top of proto definition files
           * `syntax = "proto2"` or `syntax ="proto3"` -> `edition = "editionNumber"` (-- _Example:_ `edition = "2023"` --) 
 
-## Lifecycle of a Feature {#lifecycles}
+## Lifecycle of a Feature {#lifecycles} | Protobuf Editions
 
-* TODO: 
-Editions provide the fundamental increments for the lifecycle of a feature.
-Features have an expected lifecycle: introducing
-it, changing its default behavior, deprecating it, and then removing it. For
-example:
-
-1.  Edition 2031 creates `feature.amazing_new_feature` with a default value of
-    `false`. This value maintains the same behavior as all earlier editions.
-    That is, it defaults to no impact.
-
-2.  Developers update their .proto files to `edition = "2031"`.
-
-3.  A later edition, such as edition 2033, switches the default of
-    `feature.amazing_new_feature` from `false` to `true`. This is the desired
-    behavior for all protos, and the reason that the protobuf team created the
-    feature.
-
-    Using the Prototiller tool to migrate earlier versions of proto files to
-    edition 2033 adds explicit `feature.amazing_new_feature = false` entries as
-    needed to continue to retain the previous behavior. Developers remove these
-    newly-added settings when they want the new behavior to apply to their
-    .proto files.
-
-<!-- mdformat off (preserve single lines/no wrapping) -->
-
-4.  At some point, `feature.amazing_new_feature` is marked deprecated in an edition and removed in a later one.
-
-    When a feature is removed, the code generators for that behavior and the
-    runtime libraries that support it may also be removed. The timelines will be
-    generous, though. Following the example in the earlier steps of the
-    lifecycle, the deprecation might happen in edition 2034 but not be removed
-    until edition 2036, roughly two years later. Removing a feature will always
-    initiate a major version bump.
-
-<!-- mdformat on -->
-
-Because of this lifecycle, any `.proto` file that does not use deprecated
-features has a no-op upgrade from one edition to the next.
-You will have the full
-window of the Google migration plus the deprecation window to upgrade your code.
-
-The preceding lifecycle example used boolean values for the features, but
-features may also use enums. For example, `features.field_presence` has values
-`LEGACY_REQUIRED`, `EXPLICIT`, and `IMPLICIT.`
+* fundamental increments / lifecycle of a feature
+* lifecycle
+  * introducing
+  * changing its default behavior
+  * deprecating it
+  * removing it
+* _Example:_
+  * Protobuf Edition 2031 creates `feature.amazing_new_feature` / `false` as default value
+    * `false` as default value == backward compatibility
+  * Developers update their ".proto" to `edition = "2031"`
+  * Protobuf Edition 2033, switches the default from `false` -> `true`
+    * if you use Prototiller tool (earlier versions of ".proto" -- are migrated quickly to --  ".proto" edition 2033) -> adds explicit `feature.amazing_new_feature = false`
+      * if you want use the new behavior -> remove these newly-added settings
+  * `feature.amazing_new_feature` is marked deprecated | edition x
+    * -> `feature.amazing_new_feature` is removed | edition x+1 (major version)
+      * -> code generators for that behavior & the runtime libraries / support it -- may also be -- removed
+* if you do NOT use deprecated features | ANY `.proto` -> NO-op upgrade from edition x -- to the edition x+1
 
 ## Migrating to Protobuf Editions {#migrating}
 
-Editions won't break existing binaries and don't change a message's binary,
-text, or JSON serialization format. The first edition is as minimally disruptive
-as possible. The first edition establishes the baseline and combines proto2 and
-proto3 definitions into a new single definition format.
+* Protobuf Editions
+  * will NOT
+    * break existing binaries
+    * change a message's binary, text, or JSON serialization format
+  * v1 == proto2 + proto3 definitions
+  * release 1 / year
 
-When the subsequent editions are released, default behaviors for features may
-change. You can have Prototiller do a no-op transformation of your .proto file
-or you can choose to accept some or all of the new behaviors. Editions are
-planned to be released roughly once a year.
+### Proto2 -> Editions {#proto2-migration}
 
-### Proto2 to Editions {#proto2-migration}
-
-This section shows a proto2 file, and what it might look like after running the
-Prototiller tool to change the definition files to use Protobuf Editions syntax.
+* ".proto2" file -- and run the Prototiller tool to change to -> | Protobuf Editions
 
 <section class="tabs">
 
@@ -102,11 +71,11 @@ syntax = "proto2";
 package com.example;
 
 message Player {
-  // in proto2, optional fields have explicit presence
+  // optional fields have explicit presence | proto2
   optional string name = 1;
-  // proto2 still supports the problematic "required" field rule
+  // still supports "required" field rule | proto2 
   required int32 id = 2;
-  // in proto2 this is not packed by default
+  // NOT packed by default | proto2 
   repeated int32 scores = 3;
 
   enum Handed {
@@ -116,7 +85,7 @@ message Player {
     HANDED_AMBIDEXTROUS = 3;
   }
 
-  // in proto2 enums are closed
+  // enums are closed | proto2 
   optional Handed handed = 4;
 
   reserved "gender";
@@ -132,11 +101,11 @@ edition = "2023";
 package com.example;
 
 message Player {
-  // fields have explicit presence, so no explicit setting needed
+  // fields have explicit presence -> NOT need to explicitly set
   string name = 1;
-  // to match the proto2 behavior, LEGACY_REQUIRED is set at the field level
+  // to match the proto2 behavior -> LEGACY_REQUIRED is set at the field level
   int32 id = 2 [features.field_presence = LEGACY_REQUIRED];
-  // to match the proto2 behavior, EXPANDED is set at the field level
+  // to match the proto2 behavior -> EXPANDED is set at the field level
   repeated int32 scores = 3 [features.repeated_field_encoding = EXPANDED];
 
   enum Handed {
@@ -158,8 +127,7 @@ message Player {
 
 ### Proto3 to Editions {#proto3-migration}
 
-This section shows a proto3 file, and what it might look like after running the
-Prototiller tool to change the definition files to use Protobuf Editions syntax.
+* ".proto3" file -- and run the Prototiller tool to change to -> | Protobuf Editions
 
 <section class="tabs">
 
@@ -172,11 +140,11 @@ syntax = "proto3";
 package com.example;
 
 message Player {
-  // in proto3, optional fields have explicit presence
+  // optional fields have explicit presence | proto3
   optional string name = 1;
-  // in proto3 no specified field rule defaults to implicit presence
+  // NOT specified field rule defaults to implicit presence | proto3
   int32 id = 2;
-  // in proto3 this is packed by default
+  // packed by default | proto3
   repeated int32 scores = 3;
 
   enum Handed {
@@ -228,18 +196,18 @@ message Player {
 
 ### Lexical Scoping {#scoping}
 
-Editions syntax supports lexical scoping, with a per-feature list of allowed
-targets. For example, in the first edition, features can be specified at only
-the file level or the lowest level of granularity. The implementation of lexical
-scoping enables you to set the default behavior for a feature across an entire
-file, and then override that behavior at the message, field, enum, enum value,
-oneof, service, or method level. Settings made at a higher level (file, message)
-apply when no setting is made within the same scope (field, enum value). Any
-features not explicitly set conform to the behavior defined in the edition
-version used for the .proto file.
-
-The following code sample shows some features being set at the file, field, and
-enum level. The settings are in the highlighted lines:
+* Protobuf Editions supports lexical scoping / list of allowed targets / per-feature
+  * allows
+    * setting the default behavior for a feature | entire file & override that behavior |
+      * message
+      * field
+      * enum
+      * enum value
+      * oneof
+      * service
+      * method  
+  * _Example:_  features | `edition1"` -- can be specified ONLY -- | file level or the lowest level of granularity
+* _Example:_ features being set | file, field, and enum level
 
 ```proto {highlight="lines:3,7,16"}
 edition = "2023";
@@ -248,14 +216,16 @@ option features.enum_type = CLOSED;
 
 message Person {
   string name = 1;
-  int32 id = 2 [features.presence = IMPLICIT];
+  int32 id = 2 [features.presence = IMPLICIT]; // default value is `EXPLICIT`
 
+  // `CLOSED`  because it applies the file-level setting
   enum Pay_Type {
     PAY_TYPE_UNSPECIFIED = 1;
     PAY_TYPE_SALARY = 2;
     PAY_TYPE_HOURLY = 3;
   }
 
+  // `OPEN` becauseit is set | enum
   enum Employment {
     option features.enum_type = OPEN;
     EMPLOYMENT_UNSPECIFIED = 0;
@@ -266,13 +236,9 @@ message Person {
 }
 ```
 
-In the preceding example, the presence feature is set to `IMPLICIT`; it would
-default to `EXPLICIT` if it wasn't set. The `Pay_Type` `enum` will be `CLOSED`,
-as it applies the file-level setting. The `Employment` `enum`, though, will be
-`OPEN`, as it is set within the enum.
-
 ### Prototiller {#prototiller}
 
+* TODO:
 We provide both a migration guide and migration tooling that ease the migration
 to and between editions. The tool, called Prototiller, will enable you to:
 
