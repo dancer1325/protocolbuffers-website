@@ -5,50 +5,52 @@ description = "Explains how enums currently work in Protocol Buffers vs. how the
 type = "docs"
 +++
 
-Enums behave differently in different language libraries. This topic covers the
-different behaviors as well as the plans to move protobufs to a state where they
-are consistent across all languages. If you're looking for information on how to
-use enums in general, see the corresponding sections in the
-[proto2](/programming-guides/proto2#enum) and
-[proto3](/programming-guides/proto3#enum) language guide
-topics.
+* Enums | different language libraries, behave different
+* goal
+  * different enum's behaviors
+  * plans to move protobufs -> state / -- consistent across -- ALL languages
+  * general content | proto*
+    * [proto2](/programming-guides/proto2#enum)
+    * [proto3](/programming-guides/proto3#enum)
 
 ## Definitions {#definitions}
 
-Enums have two distinct flavors (*open* and *closed*). They behave identically
-except in their handling of unknown values. Practically, this means that simple
-cases work the same, but some corner cases have interesting implications.
+* Enums flavors
+  * are
+    * *open*
+    * *closed*
+  * differences
+    * handling of unknown values
+* _Example:_ let's have `.proto` / NOT specified if it's `syntax = "proto2"` or `syntax = "proto3"`
 
-For the purpose of explanation, let us assume we have the following `.proto`
-file (we are deliberately not specifying if this is a `syntax = "proto2"` or
-`syntax = "proto3"` file right now):
+  ```
+  enum Enum {
+    A = 0;
+    B = 1;
+  }
+  
+  message Msg {
+    optional Enum enum = 1;
+  }
+  ```
+  * *open* vs *closed* --  
 
-```
-enum Enum {
-  A = 0;
-  B = 1;
-}
+    > What happens when a program parses binary data that contains field 1 with the value `2`?
 
-message Msg {
-  optional Enum enum = 1;
-}
-```
-
-The distinction between *open* and *closed* can be encapsulated in a single
-question:
-
-> What happens when a program parses binary data that contains field 1 with the
-> value `2`?
-
-*   **Open** enums will parse the value `2` and store it directly in the field.
-    Accessor will report the field as being *set* and will return something that
-    represents `2`.
-*   **Closed** enums will parse the value `2` and store it in the message's
-    unknown field set. Accessors will report the field as being *unset* and will
-    return the enum's default value.
+      * **Open** enums
+        * will parse the value `2` / store it directly | field
+        * accessor will
+          * -- report the field -- / being *set*
+          * -- return -- something / represents `2`
+      * **Closed** enums
+        *  will parse the value `2` / store it | message's unknown field set
+        *  accessors will
+          * -- report the field -- / being *unset*
+          * -- return -- enum's default value
 
 ## Implications of *Closed* Enums
 
+* TODO:
 The behavior of *closed* enums has unexpected consequences when parsing a
 repeated field. When a `repeated Enum` field is parsed all unknown values will
 be placed in the
