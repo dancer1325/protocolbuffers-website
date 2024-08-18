@@ -7,25 +7,25 @@ type = "docs"
 +++
 
 * Protobuf Editions
-  ** == collection of [features](/editions/features)
-      *** vs hardcoded behaviors / default value | older versions
-      *** == options / can be override between them (Check [lexical scoping](#scoping)) |
-          **** file
-          **** message
-          **** field
-          **** enum
-          **** ...
-      *** allows specifying the behavior of
-          **** protoc
-          **** code generators
-          **** protobuf runtimes
-  ** allows
-      *** language can evolve incrementally over time
-  ** -- replace the -- proto2 and proto3 designations
-      *** allows
-          **** 👁️ specifying the default behaviors | your file 👁️
-      *** | top of proto definition files
-          **** `syntax = "proto2"` or `syntax ="proto3"` -> `edition = "editionNumber"` (-- _Example:_ `edition = "2023"` --) 
+  * == collection of [features](/editions/features)
+      * vs hardcoded behaviors / default value | older versions
+      * == options / can be override between them (Check [lexical scoping](#scoping)) |
+          * file
+          * message
+          * field
+          * enum
+          * ...
+      * allows specifying the behavior of
+          * protoc
+          * code generators
+          * protobuf runtimes
+  * allows
+      * language can evolve incrementally over time
+  * -- replace the -- proto2 and proto3 designations
+      * allows
+          * 👁️ specifying the default behaviors | your file 👁️
+      * | top of proto definition files
+          * `syntax = "proto2"` or `syntax ="proto3"` -> `edition = "editionNumber"` (-- _Example:_ `edition = "2023"` --) 
 
 ## Lifecycle of a Feature {#lifecycles}
 
