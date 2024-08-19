@@ -5,44 +5,35 @@ description = "Covers how to use the version 3 of Protocol Buffers in your proje
 type = "docs"
 +++
 
-This guide describes how to use the protocol buffer language to structure your
-protocol buffer data, including `.proto` file syntax and how to generate data
-access classes from your `.proto` files. It covers the **proto3** version of the
-protocol buffers language: for information on the **proto2** syntax, see the
-[Proto2 Language Guide](/programming-guides/proto2).
-
-This is a reference guide – for a step by step example that uses many of the
-features described in this document, see the
-[tutorial](/getting-started)
-for your chosen language.
+* goal | **proto3**
+  * structure your protocol buffer data -- via -- protocol buffer language + `.proto` file syntax
+  * from your `.proto` -> generate data access classes
+* Check [tutorial](/getting-started) | your chosen language
 
 ## Defining A Message Type {#simple}
 
-First let's look at a very simple example. Let's say you want to define a search
-request message format, where each search request has a query string, the
-particular page of results you are interested in, and a number of results per
-page. Here's the `.proto` file you use to define the message type.
+* _Example:_ Let's define a search request message format / each search request has a
+  * query string,
+  * page number of results / you are interested in,
+  * number of results / page
 
 ```proto
-syntax = "proto3";
+// proto syntax version to use
+// if you do NOT add it -> protocol buffer compiler -- asume, that you are using -- "proto2"
+// MUST be first non-empty, non-comment line of the file
+syntax = "proto3"; 
 
 message SearchRequest {
+  // field == name/ value pair
   string query = 1;
   int32 page_number = 2;
   int32 results_per_page = 3;
 }
 ```
 
-*   The first line of the file specifies that you're using `proto3` syntax: if
-    you don't do this the protocol buffer compiler will assume you are using
-    [proto2](/programming-guides/proto2). This must be
-    the first non-empty, non-comment line of the file.
-*   The `SearchRequest` message definition specifies three fields (name/value
-    pairs), one for each piece of data that you want to include in this type of
-    message. Each field has a name and a type.
-
 ### Specifying Field Types {#specifying-types}
 
+* TODO:
 In the earlier example, all the fields are [scalar types](#scalar): two integers
 (`page_number` and `results_per_page`) and a string (`query`). You can also
 specify [enumerations](#enum) and composite types like other message types for
