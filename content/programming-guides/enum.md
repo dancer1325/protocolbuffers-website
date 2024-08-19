@@ -72,29 +72,25 @@ stored as an unknown field
 
 ## History {#history}
 
-* TODO:
-Prior to the introduction of `syntax = "proto3"` all enums were *closed*. Proto3
-introduced *open* enums specifically because of the unexpected behavior that
-*closed* enums cause.
+* ALL enums were *closed* | `syntax = "proto2"`
+    * proto3 -- introduced -- *open* enums
+      * Reason: 🧠 unexpected behavior of *closed* enums 🧠
 
 ## Specification {#spec}
 
-The following specifies the behavior of conformant implementations for protobuf.
-Because this is subtle, many implementations are out of conformance. See
-[Known Issues](#known-issues) for details on how different implementations
-behave.
-
-*   When a `proto2` file imports an enum defined in a `proto2` file, that enum
-    should be treated as **closed**.
-*   When a `proto3` file imports an enum defined in a `proto3` file, that enum
-    should be treated as **open**.
-*   When a `proto3` file imports an enum defined in a `proto2` file, the
-    `protoc` compiler will produce an error.
-*   When a `proto2` file imports an enum defined in a `proto3` file, that enum
-    should be treated as **open**.
+* -- specification about the -- behavior of conformant implementations for protobuf
+  * -> many implementations are out of conformance -- Check [Known Issues](#known-issues)
+  * if a `proto2` file imports an enum / defined | `proto2` -> enum
+    -- should be treated as -- **closed**
+  * if a `proto3` file imports an enum / defined | `proto3`-> enum
+    -- should be treated as -- **open**
+  * if a `proto3` file imports an enum / defined | `proto2` file -> `protoc` -- will produce an -- error
+  * if a `proto2` file imports an enum / defined | `proto3` file -> enum
+    -- should be treated as -- **open**
 
 ## Known Issues {#known-issues}
 
+* TODO:
 ### C++ {#cpp}
 
 All known C++ releases are out of conformance. When a `proto2` file imports an
@@ -106,41 +102,40 @@ All known C# releases are out of conformance. C# treats all enums as **open**.
 
 ### Java {#java}
 
-All known Java releases are out of conformance. When a `proto2` file imports an
-enum defined in a `proto3` file, Java treats that field as a **closed** enum.
+* 👁️ALL known Java releases are OUT of conformance 👁️
+  * if a `proto2` file imports an enum / defined | `proto3` -> Java -- treats that field as a -- **closed** enum
+* Java's handling of **open** enums has surprising edge cases
+  * _Example:_
 
-> **NOTE:** Java's handling of **open** enums has surprising edge cases. Given
-> the following definitions:
->
-> ```
-> syntax = "proto3";
->
-> enum Enum {
->   A = 0;
->   B = 1;
-> }
->
-> message Msg {
->   repeated Enum name = 1;
-> }
-> ```
->
-> Java will generate the methods `Enum getName()` and `int getNameValue()`. The
-> method `getName` will return `Enum.UNRECOGNIZED` for values outside the known
-> set (such as `2`), whereas `getNameValue` will return `2`.
->
-> Similarly, Java will generate methods `Builder setName(Enum value)` and
-> `Builder setNameValue(int value)`. The method `setName` will throw an
-> exception when passed `Enum.UNRECOGNIZED`, whereas `setNameValue` will accept
-> `2`.
+    ```
+    syntax = "proto3";
+    
+    enum Enum {
+      A = 0;
+      B = 1;
+    }
+    
+    message Msg {
+      repeated Enum name = 1;
+    }
+    ```
+    
+    * methods generated are
+      * `Enum getName()`
+        * if values outside the know set (_Example:_ `2`) -> return `Enum.UNRECOGNIZED`
+      * `int getNameValue()`
+        * if values outside the know set (_Example:_ `2`) -> return `2`
+      * `Builder setName(Enum value)`
+        * if you pass `Enum.UNRECOGNIZED` -> throw an exception
+      * `Builder setNameValue(int value)`
+        * accept `2`
 
 ### Kotlin {#java}
 
-All known Kotlin releases are out of conformance. When a `proto2` file imports
-an enum defined in a `proto3` file, Kotlin treats that field as a **closed**
-enum.
-
-Kotlin is built on Java and shares all of its oddities.
+* 👁️ALL known Kotlin releases are OUT of conformance 👁️
+  * if a `proto2` file imports an enum / defined | `proto3` -> Kotlin --  treats that field as a -- **closed** enum
+* Kotlin oddities == Java oddities
+  * Reason: 🧠 Kotlin is built | Java 🧠
 
 ### Go {#go}
 
