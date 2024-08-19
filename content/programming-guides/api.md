@@ -5,12 +5,11 @@ description = "A future-proof API is surprisingly hard to get right. The suggest
 type = "docs"
 +++
 
-Updated for proto3. Patches welcome!
+* Updated for proto3
+* == complement to [Proto Best Practices](/programming-guides/dos-donts)
+  * != prescription for Java/C++/Go and other APIs
 
-This doc is a complement to
-[Proto Best Practices](/programming-guides/dos-donts).
-It's not a prescription for Java/C++/Go and other APIs.
-
+* TODO:
 If you see a proto straying from these guidelines in a code review, point the
 author to this topic and help spread the word.
 
