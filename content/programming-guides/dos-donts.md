@@ -5,42 +5,47 @@ description = "Shares vetted best practices for authoring Protocol Buffers."
 type = "docs"
 +++
 
-Clients and servers are never updated at exactly the same time - even when you
-try to update them at the same time. One or the
-other may get rolled back. Don’t assume that you can make a breaking change and
-it'll be okay because the client and server are in sync.
+* clients and servers are NEVER updated | same time
+    * Reason: 🧠 one may get rolled back 🧠
+* do NOT assume that you can make a breaking change
+    * Reason: 🧠 client and server are in sync 🧠    
 
 <a id="dont-re-use-a-tag-number"></a>
 
 ## **Don't** Re-use a Tag Number {#reuse-number}
 
-Never re-use a tag number. It messes up deserialization. Even if you think no
-one is using the field, don’t re-use a tag number. If the change was live ever,
-there could be serialized versions of your proto in a log
-somewhere. Or there could be old code in another server that will break.
+* NEVER re-use a tag number
+    * Reason: 🧠 messes up deserialization 🧠
+        * _Example1:_ if the change was live ever -> there could be serialized versions of your proto | log somewhere
+        * _Example2:_ old code | another server / will break
 
 <a id="do-reserve-tag-numbers-for-deleted-fields"></a>
 
 ## **Do** Reserve Tag Numbers for Deleted Fields {#reserve-tag-numbers}
 
-When you delete a field that's no longer used, reserve its tag number so that no
-one accidentally re-uses it in the future. Just `reserved 2, 3;` is enough. No
-type required (lets you trim dependencies!). You can also reserve names to avoid
-recycling now-deleted field names: `reserved "foo", "bar";`.
+* if you delete a field / NO longer used -> reserve
+    * its tag number or
+        * Reason: 🧠 no one accidentally re-uses it | future 🧠
+        * _Example:_ `reserved 2, 3;` 
+    * names / avoid recycling now-deleted field names
+        * _Example:_ `reserved "foo", "bar";`
 
 <a id="do-reserve-numbers-for-deleted-enum-values"></a>
 
 ## **Do** Reserve Numbers for Deleted Enum Values {#reserve-deleted-numbers}
 
-When you delete an enum value that's no longer used, reserve its number so that
-no one accidentally re-uses it in the future. Just `reserved 2, 3;` is enough.
-You can also reserve names to avoid recycling now-deleted value names: `reserved
-"FOO", "BAR";`.
+* if you delete an enum value / NO longer used -> reserve its
+    * number
+        * Reason: 🧠 no one accidentally re-uses it | future 🧠
+        * _Example:_ `reserved 2, 3;`
+    * names / avoid recycling now-deleted value names
+        * _Example:_ `reserved "FOO", "BAR";`
 
 <a id="dont-change-the-type-of-a-field"></a>
 
 ## **Don't** Change the Type of a Field {#change-type}
 
+* TODO:
 Almost never change the type of a field; it'll mess up deserialization, same as
 re-using a tag number. The
 [protobuf docs](/programming-guides/proto2#updating)
