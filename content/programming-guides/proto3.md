@@ -44,8 +44,10 @@ message SearchRequest {
 * number / assigned to your message's field
   * : [`1`, `536,870,911`] / restrictions
     * number **must be unique** | ALL fields for that message
+      * == NOT reuse -- Check [Consequences of Reusing Field Numbers](#consequences) --
     * field numbers [`19,000`, `19,999`] -- are reserved for the -- Protocol Buffers implementation
-      * if you use one of these reserved field numbers | your message -> protocol buffer compiler will complain 
+      * if you use one of these reserved field numbers | your message -> protocol buffer compiler will complain
+      * Check [reserved](#fieldreserved)
     * can NOT use ANY field number
       * previously [reserved](#fieldreserved) or
       * / have been allocated to [extensions](#extensions)
@@ -53,51 +55,44 @@ message SearchRequest {
     * Reason: 🧠 identifies the field | [message wire format](/programming-guides/encoding) 🧠
     * 👁️ "Changing" a field number == delete that field + create a new field / same type & new number 👁️
       * Check [Deleting Fields](#deleting)
-
-* TODO:
-Field numbers **should never be reused**. Never take a field number out of the
-[reserved](#fieldreserved) list for reuse with a new field definition. See
-[Consequences of Reusing Field Numbers](#consequences).
-
-You should use the field numbers 1 through 15 for the most-frequently-set
-fields. Lower field number values take less space in the wire format. For
-example, field numbers in the range 1 through 15 take one byte to encode. Field
-numbers in the range 16 through 2047 take two bytes. You can find out more about
-this in
-[Protocol Buffer Encoding](/programming-guides/encoding#structure).
+  * [`1`, `15`]
+    * uses
+      * | most-frequently-set fields
+  * space of lower field number values | wire format <  space of lower field number values | wire format
+    * Check [Protocol Buffer Encoding](/programming-guides/encoding#structure) 
+    * _Example1:_  field numbers | [`1`, `15`] -> 1 byte to encode
+    * _Example2:_  field numbers | [`16`, `2047`] -> 2 byte to encode
+  * max field is 29 bits
+    * Reason: 🧠 NOT 32 bits, because 3 lower bits are used for the wire format 🧠
+    * Check [Encoding topic](/programming-guides/encoding#structure)
 
 #### Consequences of Reusing Field Numbers {#consequences}
 
-Reusing a field number makes decoding wire-format messages ambiguous.
+* if you reuse field numnbers -> decoding wire-format messages is ambiguous
+* protobuf wire format
+  * is lean
+  * NOT way to detect
+    * fields /
+      * encoded -- via -- a definition
+      * decoded -- via -- another
+    * consequences
+      * developer time lost to debugging
+      * parse/merge error
+      * leaked PII/SPII (?)
+      * data corruption
+* use cases
+  * renumbering fields
+    * Reason: 🧠 more aesthetically number order for fields 🧠
+    * renumber effectively == delete + re-add ALL the fields / involved
+      * -> incompatible wire-format changes
+  * delete a field & NOT [reserving](#fieldreserved) the number / prevent future reuse
 
-The protobuf wire format is lean and doesn't provide a way to detect fields
-encoded using one definition and decoded using another.
-
-Encoding a field using one definition and then decoding that same field with a
-different definition can lead to:
-
--   Developer time lost to debugging
--   A parse/merge error (best case scenario)
--   Leaked PII/SPII
--   Data corruption
-
-Common causes of field number reuse:
-
--   renumbering fields (sometimes done to achieve a more aesthetically pleasing
-    number order for fields). Renumbering effectively deletes and re-adds all
-    the fields involved in the renumbering, resulting in incompatible
-    wire-format changes.
--   deleting a field and not [reserving](#fieldreserved) the number to prevent
-    future reuse.
-
-The max field is 29 bits instead of the more-typical 32 bits because three lower
-bits are used for the wire format. For more on this, see the
-[Encoding topic](/programming-guides/encoding#structure).
 
 <a id="specifying-field-rules"></a>
 
 ### Specifying Field Labels {#field-labels}
 
+* TODO:
 Message fields can be one of the following:
 
 *   `optional`: An `optional` field is in one of two possible states:
