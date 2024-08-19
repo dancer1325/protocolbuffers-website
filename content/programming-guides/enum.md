@@ -38,47 +38,41 @@ type = "docs"
     > What happens when a program parses binary data that contains field 1 with the value `2`?
 
       * **Open** enums
-        * will parse the value `2` / store it directly | field
+        * will parse the value `2` + store it directly | field
         * accessor will
           * -- report the field -- / being *set*
           * -- return -- something / represents `2`
       * **Closed** enums
-        *  will parse the value `2` / store it | message's unknown field set
+        *  will parse the value `2` + store it | message's unknown field
         *  accessors will
           * -- report the field -- / being *unset*
           * -- return -- enum's default value
 
 ## Implications of *Closed* Enums
 
-* TODO:
-The behavior of *closed* enums has unexpected consequences when parsing a
-repeated field. When a `repeated Enum` field is parsed all unknown values will
-be placed in the
-[unknown field](/programming-guides/proto3/#unknowns)
-set. When it is serialized those unknown values will be written again, *but not
-in their original place in the list*. For example, given the `.proto` file:
+* if `repeated Enum` field is parsed -> ALL unknown values will be placed | [unknown field](/programming-guides/proto3/#unknowns) set
+  * Once it is serialized -> those unknown values will be written again / NOT | original place in the list
+    * _Example:_ given the `.proto`
 
-```
-enum Enum {
-  A = 0;
-  B = 1;
-}
+    ```
+    enum Enum {
+      A = 0;
+      B = 1;
+    }
+    
+    message Msg {
+      repeated Enum r = 1;
+    }
+    ```
 
-message Msg {
-  repeated Enum r = 1;
-}
-```
-
-A wire format containing the values `[0, 2, 1, 2]` for field 1 will parse so
-that the repeated field contains `[0, 1]` and the value `[2, 2]` will end up
-stored as an unknown field. After reserializing the message, the wire format
-will correspond to `[0, 1, 2, 2]`.
-
-Similarly, maps with *closed* enums for their value will place entire entries
-(key and value) in the unknown fields whenever the value is unknown.
+      * wire format / contain the values `[0, 2, 1, 2]` / field 1 will parse to -> repeated field contains `[0, 1]` & the value `[2, 2]` will end up
+stored as an unknown field
+      * after reserializing the message, the wire format == `[0, 1, 2, 2]`
+* if maps with *closed* enums / value is unknown -> their value will place entire entries (key and value) | unknown fields
 
 ## History {#history}
 
+* TODO:
 Prior to the introduction of `syntax = "proto3"` all enums were *closed*. Proto3
 introduced *open* enums specifically because of the unexpected behavior that
 *closed* enums cause.
