@@ -33,31 +33,28 @@ message SearchRequest {
 
 ### Specifying Field Types {#specifying-types}
 
-* TODO:
-In the earlier example, all the fields are [scalar types](#scalar): two integers
-(`page_number` and `results_per_page`) and a string (`query`). You can also
-specify [enumerations](#enum) and composite types like other message types for
-your field.
+* field types
+  * [scalar types](#scalar)
+    * _Example:_ integers, string
+  * [enumerations](#enum)
+  * composite types
 
 ### Assigning Field Numbers {#assigning}
 
-You must give each field in your message definition a number between `1` and
-`536,870,911` with the following restrictions:
+* number / assigned to your message's field
+  * : [`1`, `536,870,911`] / restrictions
+    * number **must be unique** | ALL fields for that message
+    * field numbers [`19,000`, `19,999`] -- are reserved for the -- Protocol Buffers implementation
+      * if you use one of these reserved field numbers | your message -> protocol buffer compiler will complain 
+    * can NOT use ANY field number
+      * previously [reserved](#fieldreserved) or
+      * / have been allocated to [extensions](#extensions)
+  * **once your message type is in use -> can NOT be changed**
+    * Reason: 🧠 identifies the field | [message wire format](/programming-guides/encoding) 🧠
+    * 👁️ "Changing" a field number == delete that field + create a new field / same type & new number 👁️
+      * Check [Deleting Fields](#deleting)
 
--   The given number **must be unique** among all fields for that message.
--   Field numbers `19,000` to `19,999` are reserved for the Protocol Buffers
-    implementation. The protocol buffer compiler will complain if you use one of
-    these reserved field numbers in your message.
--   You cannot use any previously [reserved](#fieldreserved) field numbers or
-    any field numbers that have been allocated to [extensions](#extensions).
-
-This number **cannot be changed once your message type is in use** because it
-identifies the field in the
-[message wire format](/programming-guides/encoding).
-"Changing" a field number is equivalent to deleting that field and creating a
-new field with the same type but a new number. See [Deleting Fields](#deleting)
-for how to do this properly.
-
+* TODO:
 Field numbers **should never be reused**. Never take a field number out of the
 [reserved](#fieldreserved) list for reuse with a new field definition. See
 [Consequences of Reusing Field Numbers](#consequences).
