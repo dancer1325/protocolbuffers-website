@@ -180,34 +180,22 @@ type = "docs"
 
 ## Compiling Your Protocol Buffers {#compiling-protocol-buffers}
 
-* TODO:
-Now that you have a `.proto`, the next thing you need to do is generate the
-classes you'll need to read and write `AddressBook` (and hence `Person` and
-`PhoneNumber`) messages. To do this, you need to run the protocol buffer
-compiler `protoc` on your `.proto`:
-
-1.  If you haven't installed the compiler,
-    [download the package](/downloads) and follow the
-    instructions in the README.
-
-1.  Now run the compiler, specifying the source directory (where your
-    application's source code lives -- the current directory is used if you
-    don't provide a value), the destination directory (where you want the
-    generated code to go; often the same as `$SRC_DIR`), and the path to your
-    `.proto`. In this case, you...:
-
-    ```shell
-    protoc -I=$SRC_DIR --java_out=$DST_DIR $SRC_DIR/addressbook.proto
-    ```
-
-    Because you want Java classes, you use the `--java_out` option -- similar
-    options are provided for other supported languages.
-
-This generates a `com/example/tutorial/protos/` subdirectory in your specified
-destination directory, containing a few generated `.java` files.
+* protocol buffer compiler -- `protoc` --
+* steps
+  * [download the compiler](/downloads)
+  * `protoc -I=$SRC_DIR --java_out=$DST_DIR $SRC_DIR/addressbook.proto`
+    * `-I=$SRC_DIR`
+      * source directory | application's source code lives
+      * if you do NOT provide a value -> current directory
+    * `--java_out=$DST_DIR`
+      * because you want Java classes -- other languages are supported --  
+      * destination directory == where you want / generated code goes
+        * normally == `$SRC_DIR`
+          * _Example:_ Previously, subdirectory generated would be `com/example/tutorial/protos/` / contain generated several `.java` files
 
 ## The Protocol Buffer API {#protobuf-api}
 
+* TODO:
 Let's look at some of the generated code and see what classes and methods the
 compiler has created for you. If you look in `com/example/tutorial/protos/`, you
 can see that it contains `.java` files defining a class for each message you
