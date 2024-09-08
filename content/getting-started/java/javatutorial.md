@@ -102,7 +102,37 @@ type = "docs"
         * tag numbers [16,] | less-common elements
     * allows
       * identifying field | binary encoding
+    * elements | repeated field -> requires re-encoding the tag number
     * _Example:_ " = 1", " = 2", ..
+  * fields
+    * modifiers
+      * 👁️ required to annotate | ALL fields 👁️
+      * allowed
+        * `optional`
+          * if an optional field value is NOT set -> default value is used
+            * ways to specify default value
+              * explicitly
+              * built-in / types
+                * zero -- for -- numeric types
+                * empty string -- for -- strings
+                * false -- for -- bools
+                * "default instance" or "prototype" of the message / NONE fields set -- for -- embedded messages
+            * if you get the value -- via an -- accessor, -> return the default value
+        * `repeated`
+          * ANY number of times -- including 0 --
+          * == dynamically sized arrays
+          * order of the repeated values is preserved | protocol buffer
+        * `required`
+          * == value -- must be -- provided
+            * if you do NOT provide a value -> message is considered as "uninitialized"
+              * if you try to build an uninitialized message -> throw a `RuntimeException`
+              * if you parse an uninitialized message -> throw an `IOException`
+          * behavior == (except to previous case) optional field behavior
+          * 👁️NOT recommended by Google 👁️
+            * Reason: 🧠if suddenly, you wish stop using the field -> problematic 🧠
+          * ❌NOT supported by proto3 ❌
+          * alternative to this modifier
+            * write application-specific custom validation routines / your buffers
 
 * _Example:_ `addressbook.proto`
 
@@ -133,7 +163,7 @@ type = "docs"
       // message nested  
       message PhoneNumber {
         optional string number = 1;
-        optional PhoneType type = 2 [default = PHONE_TYPE_HOME];
+        optional PhoneType type = 2 [default = PHONE_TYPE_HOME];  // default value is set
       }
     
       repeated PhoneNumber phones = 4;
@@ -145,51 +175,12 @@ type = "docs"
     }
     ```
 
-* TODO:
-
-Each element in a repeated field requires
-re-encoding the tag number, so repeated fields are particularly good candidates
-for this optimization.
-
-Each field must be annotated with one of the following modifiers:
-
--   `optional`: the field may or may not be set. If an optional field value
-    isn't set, a default value is used. For simple types, you can specify your
-    own default value, as we've done for the phone number `type` in the example.
-    Otherwise, a system default is used: zero for numeric types, the empty
-    string for strings, false for bools. For embedded messages, the default
-    value is always the "default instance" or "prototype" of the message, which
-    has none of its fields set. Calling the accessor to get the value of an
-    optional (or required) field which has not been explicitly set always
-    returns that field's default value.
--   `repeated`: the field may be repeated any number of times (including zero).
-    The order of the repeated values will be preserved in the protocol buffer.
-    Think of repeated fields as dynamically sized arrays.
--   `required`: a value for the field must be provided, otherwise the message
-    will be considered "uninitialized". Trying to build an uninitialized message
-    will throw a `RuntimeException`. Parsing an uninitialized message will throw
-    an `IOException`. Other than this, a required field behaves exactly like an
-    optional field.
-
-{{% alert title="Important" color="warning" %}} **Required Is Forever**
-You should be very careful about marking fields as `required`. If at some point
-you wish to stop writing or sending a required field, it will be problematic to
-change the field to an optional field -- old readers will consider messages
-without this field to be incomplete and may reject or drop them unintentionally.
-You should consider writing application-specific custom validation routines for
-your buffers instead. Within Google, `required` fields are strongly disfavored;
-most messages defined in proto2 syntax use `optional` and `repeated` only.
-(Proto3 does not support `required` fields at all.)
-{{% /alert %}}
-
-You'll find a complete guide to writing `.proto` files -- including all the
-possible field types -- in the
-[Protocol Buffer Language Guide](/programming-guides/proto2).
-Don't go looking for facilities similar to class inheritance, though -- protocol
-buffers don't do that.
+* check [Protocol Buffer Language Guide](/programming-guides/proto2)
+* class inheritance does NOT exist | protocol buffers
 
 ## Compiling Your Protocol Buffers {#compiling-protocol-buffers}
 
+* TODO:
 Now that you have a `.proto`, the next thing you need to do is generate the
 classes you'll need to read and write `AddressBook` (and hence `Person` and
 `PhoneNumber`) messages. To do this, you need to run the protocol buffer
