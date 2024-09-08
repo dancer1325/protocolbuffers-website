@@ -6,153 +6,148 @@ description = "A basic Java programmers introduction to working with protocol bu
 type = "docs"
 +++
 
-This tutorial provides a basic Java programmer's introduction to working with
-protocol buffers. By walking through creating a simple example application, it
-shows you how to
-
--   Define message formats in a `.proto` file.
--   Use the protocol buffer compiler.
--   Use the Java protocol buffer API to write and read messages.
-
-This isn't a comprehensive guide to using protocol buffers in Java. For more
-detailed reference information, see the
-[Protocol Buffer Language Guide (proto2)](/programming-guides/proto2),
-the
-[Protocol Buffer Language Guide (proto3)](/programming-guides/proto3),
-the
-[Java API Reference](/reference/java/api-docs/overview-summary.html),
-the
-[Java Generated Code Guide](/reference/java/java-generated),
-and the
-[Encoding Reference](/programming-guides/encoding).
+* goal
+  * basic Java programmer's introduction -- to work with -- protocol buffers
+    * Define message formats | `.proto`
+    * Use the protocol buffer compiler
+    * write and read messages -- via -- Java protocol buffer API
+* check also
+  * [Protocol Buffer Language Guide (proto2)](/programming-guides/proto2)
+  * [Protocol Buffer Language Guide (proto3)](/programming-guides/proto3),
+  * [Java API Reference](/reference/java/api-docs/overview-summary.html)
+  * [Java Generated Code Guide](/reference/java/java-generated),
+  * [Encoding Reference](/programming-guides/encoding)
 
 ## The Problem Domain {#problem-domain}
 
-The example we're going to use is a very simple "address book" application that
-can read and write people's contact details to and from a file. Each person in
-the address book has a name, an ID, an email address, and a contact phone
-number.
-
-How do you serialize and retrieve structured data like this? There are a few
-ways to solve this problem:
-
--   Use Java Serialization. This is the default approach since it's built into
-    the language, but it has a host of well-known problems (see Effective Java,
-    by Josh Bloch pp. 213), and also doesn't work very well if you need to share
-    data with applications written in C++ or Python.
--   You can invent an ad-hoc way to encode the data items into a single
-    string -- such as encoding 4 ints as "12:3:-23:67". This is a simple and
-    flexible approach, although it does require writing one-off encoding and
-    parsing code, and the parsing imposes a small run-time cost. This works best
-    for encoding very simple data.
--   Serialize the data to XML. This approach can be very attractive since XML is
-    (sort of) human readable and there are binding libraries for lots of
-    languages. This can be a good choice if you want to share data with other
-    applications/projects. However, XML is notoriously space intensive, and
-    encoding/decoding it can impose a huge performance penalty on applications.
-    Also, navigating an XML DOM tree is considerably more complicated than
-    navigating simple fields in a class normally would be.
-
-Instead of these options, you can use protocol buffers. Protocol buffers are the
-flexible, efficient, automated solution to solve exactly this problem. With
-protocol buffers, you write a `.proto` description of the data structure you
-wish to store. From that, the protocol buffer compiler creates a class that
-implements automatic encoding and parsing of the protocol buffer data with an
-efficient binary format. The generated class provides getters and setters for
-the fields that make up a protocol buffer and takes care of the details of
-reading and writing the protocol buffer as a unit. Importantly, the protocol
-buffer format supports the idea of extending the format over time in such a way
-that the code can still read data encoded with the old format.
+* "address book" application / 
+  * can read and write people's contact details
+    * -- to -- a file
+    * -- from -- a file
+  * person details | address book
+    * name,
+    * ID,
+    * email address,
+    * contact phone number
+* ways to serialize and retrieve this structured data
+  * Java Serialization
+    * default approach
+      * Reason: 🧠 built into the language 🧠
+    * host of well-known problems -- check Effective Java, by Josh Bloch pp. 213 --
+    * if you need to share data with applications / written | C++ or Python -> NOT work very well
+  * invent an ad-hoc way / data items -- are encoded into a -- 1 string
+    * _Example:_4 ints -- are encoded to -- "12:3:-23:67"
+    * simple and flexible approach
+    * requirements
+      * writing one-off encoding and parsing code / parsing -> small run-time cost
+    * uses
+      * encode very simple data
+  * Serialize data -> XML
+    * attractive approach
+      * Reason: 🧠 XML is human readable & there are binding libraries / lots of languages 🧠
+    * uses
+      * share data with other applications/projects
+    * cons
+      * XML is notoriously space intensive
+        * -> encoding/decoding it -> performance penalty | applications
+      * navigating an XML DOM tree - more complicated than - navigating simple fields | class
+  * ⭐ protocol buffers ⭐
+    * flexible,
+    * efficient,
+    * automated
+    * how does it work?
+      * write a `.proto` of the data structure
+      * protocol buffer compiler on previous `.proto` -> creates a class / implements
+        * automatic encoding and parsing of the protocol buffer data + efficient binary format
+        * getters and setters for the fields / make up a protocol buffer
+        * details of reading & writing the protocol buffer -- as a -- unit
+    * code can be extended / -- via the old format -- can STILL read data encoded
 
 ## Where to Find the Example Code {#example-code}
 
-The example code is included in the source code package, under the "examples"
-directory. [Download it here.](/downloads)
+* | source code package, "/examples"
 
 ## Defining Your Protocol Format {#protocol-format}
 
-To create your address book application, you'll need to start with a `.proto`
-file. The definitions in a `.proto` file are simple: you add a *message* for
-each data structure you want to serialize, then specify a name and a type for
-each field in the message. Here is the `.proto` file that defines your messages,
-`addressbook.proto`.
+* | `.proto`
+  * *message* / data structure
+    * specifying
+      * name
+      * type / message's field
+      * package
+        * prevent naming conflicts vs different projects
+    * message types -- can be nested inside -- other messages 
+  * `java_package`
+    * Java package name | generated classes should live
+    * if you do NOT specify it -> Java package name is `package`
+      * ❌ NOT recommended ❌
+  * `java_outer_classname`
+    * generated class name of the wrapper class
+    * if you NOT specify it -> java class name = fileNameToUpperCamelCase
+      * _Example:_ "my_proto.proto" ->"MyProto" or "addressbook.proto" -> "Addressbook"
+  * `java_multiple_files = true`
+    * generate a separate `.java` / generated class
+      * != | legacy behavior
+        * generate 1 `.java` / wrapper class + ALL other classes / nested | wrapper class
+  * standard simple data types
+    * `bool`,
+    * `int32`,
+    * `float`,
+    * `double`
+    * `string`
+  * tag numbers
+    * == markers / each element
+      * [1, 15] bytes to encode < [16, ] bytes to encode ->
+        * tag numbers [1, 15] | common elements
+        * tag numbers [16,] | less-common elements
+    * allows
+      * identifying field | binary encoding
+    * _Example:_ " = 1", " = 2", ..
 
-```proto
-syntax = "proto2";
+* _Example:_ `addressbook.proto`
 
-package tutorial;
+    ```proto
+    syntax = "proto2";   // protobuffer version to use
+    
+    package tutorial;
+    
+    option java_multiple_files = true;
+    option java_package = "com.example.tutorial.protos";
+    option java_outer_classname = "AddressBookProtos";
+    
+    // Person is a data structure -> define -- via -- message
+    message Person {
+      optional string name = 1;
+      optional int32 id = 2;
+      optional string email = 3;
+    
+      // == enum | Java
+      enum PhoneType {
+        PHONE_TYPE_UNSPECIFIED = 0;
+        PHONE_TYPE_MOBILE = 1;
+        PHONE_TYPE_HOME = 2;
+        PHONE_TYPE_WORK = 3;
+      }
+    
+      // PhoneNumber is a data structure -> define -- via -- message
+      // message nested  
+      message PhoneNumber {
+        optional string number = 1;
+        optional PhoneType type = 2 [default = PHONE_TYPE_HOME];
+      }
+    
+      repeated PhoneNumber phones = 4;
+    }
+    
+    // AddressBook is a data structure -> define -- via -- message
+    message AddressBook {
+      repeated Person people = 1;
+    }
+    ```
 
-option java_multiple_files = true;
-option java_package = "com.example.tutorial.protos";
-option java_outer_classname = "AddressBookProtos";
+* TODO:
 
-message Person {
-  optional string name = 1;
-  optional int32 id = 2;
-  optional string email = 3;
-
-  enum PhoneType {
-    PHONE_TYPE_UNSPECIFIED = 0;
-    PHONE_TYPE_MOBILE = 1;
-    PHONE_TYPE_HOME = 2;
-    PHONE_TYPE_WORK = 3;
-  }
-
-  message PhoneNumber {
-    optional string number = 1;
-    optional PhoneType type = 2 [default = PHONE_TYPE_HOME];
-  }
-
-  repeated PhoneNumber phones = 4;
-}
-
-message AddressBook {
-  repeated Person people = 1;
-}
-```
-
-As you can see, the syntax is similar to C++ or Java. Let's go through each part
-of the file and see what it does.
-
-The `.proto` file starts with a package declaration, which helps to prevent
-naming conflicts between different projects. In Java, the package name is used
-as the Java package unless you have explicitly specified a `java_package`, as we
-have here. Even if you do provide a `java_package`, you should still define a
-normal `package` as well to avoid name collisions in the Protocol Buffers name
-space as well as in non-Java languages.
-
-After the package declaration, you can see three options that are Java-specific:
-`java_multiple_files`, `java_package`, and `java_outer_classname`.
-`java_package` specifies in what Java package name your generated classes should
-live. If you don't specify this explicitly, it simply matches the package name
-given by the `package` declaration, but these names usually aren't appropriate
-Java package names (since they usually don't start with a domain name). The
-`java_outer_classname` option defines the class name of the wrapper class which
-will represent this file. If you don't give a `java_outer_classname` explicitly,
-it will be generated by converting the file name to upper camel case. For
-example, "my_proto.proto" would, by default, use "MyProto" as the wrapper class
-name. The `java_multiple_files = true` option enables generating a separate
-`.java` file for each generated class (instead of the legacy behavior of
-generating a single `.java` file for the wrapper class, using the wrapper class
-as an outer class, and nesting all the other classes inside the wrapper class).
-
-Next, you have your message definitions. A message is just an aggregate
-containing a set of typed fields. Many standard simple data types are available
-as field types, including `bool`, `int32`, `float`, `double`, and `string`. You
-can also add further structure to your messages by using other message types as
-field types -- in the above example the `Person` message contains `PhoneNumber`
-messages, while the `AddressBook` message contains `Person` messages. You can
-even define message types nested inside other messages -- as you can see, the
-`PhoneNumber` type is defined inside `Person`. You can also define `enum` types
-if you want one of your fields to have one of a predefined list of values --
-here you want to specify that a phone number can be one of the following phone
-types: `PHONE_TYPE_MOBILE`, `PHONE_TYPE_HOME`, or `PHONE_TYPE_WORK`.
-
-The " = 1", " = 2" markers on each element identify the unique "tag" that field
-uses in the binary encoding. Tag numbers 1-15 require one less byte to encode
-than higher numbers, so as an optimization you can decide to use those tags for
-the commonly used or repeated elements, leaving tags 16 and higher for
-less-commonly used optional elements. Each element in a repeated field requires
+Each element in a repeated field requires
 re-encoding the tag number, so repeated fields are particularly good candidates
 for this optimization.
 
