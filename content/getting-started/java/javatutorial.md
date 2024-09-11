@@ -195,68 +195,69 @@ type = "docs"
 
 ## The Protocol Buffer API {#protobuf-api}
 
-* TODO:
-Let's look at some of the generated code and see what classes and methods the
-compiler has created for you. If you look in `com/example/tutorial/protos/`, you
+* Let's look at some of the generated code and see what classes and methods the
+compiler has created for you | `com/example/tutorial/protos/`, you
 can see that it contains `.java` files defining a class for each message you
 specified in `addressbook.proto`. Each class has its own `Builder` class that
 you use to create instances of that class. You can find out more about builders
 in the [Builders vs. Messages](#builders-messages) section below.
 
+* TODO:
 Both messages and builders have auto-generated accessor methods for each field
 of the message; messages have only getters while builders have both getters and
-setters. Here are some of the accessors for the `Person` class (implementations
-omitted for brevity):
+setters
+* _Example:_ (Using the previous example)
+  * `Person` class accessors 
 
-```java
-// required string name = 1;
-public boolean hasName();
-public String getName();
+    ```java
+    // required string name = 1;
+    public boolean hasName();
+    public String getName();
+    
+    // required int32 id = 2;
+    public boolean hasId();
+    public int getId();
+    
+    // optional string email = 3;
+    public boolean hasEmail();
+    public String getEmail();
+    
+    // repeated .tutorial.Person.PhoneNumber phones = 4;
+    public List<PhoneNumber> getPhonesList();
+    public int getPhonesCount();
+    public PhoneNumber getPhones(int index);
+    ```
 
-// required int32 id = 2;
-public boolean hasId();
-public int getId();
+  * `Person.Builder` getters and setters
 
-// optional string email = 3;
-public boolean hasEmail();
-public String getEmail();
-
-// repeated .tutorial.Person.PhoneNumber phones = 4;
-public List<PhoneNumber> getPhonesList();
-public int getPhonesCount();
-public PhoneNumber getPhones(int index);
-```
-
-Meanwhile, `Person.Builder` has the same getters plus setters:
-
-```java
-// required string name = 1;
-public boolean hasName();
-public java.lang.String getName();
-public Builder setName(String value);
-public Builder clearName();
-
-// required int32 id = 2;
-public boolean hasId();
-public int getId();
-public Builder setId(int value);
-public Builder clearId();
-
-// optional string email = 3;
-public boolean hasEmail();
-public String getEmail();
-public Builder setEmail(String value);
-public Builder clearEmail();
-
-// repeated .tutorial.Person.PhoneNumber phones = 4;
-public List<PhoneNumber> getPhonesList();
-public int getPhonesCount();
-public PhoneNumber getPhones(int index);
-public Builder setPhones(int index, PhoneNumber value);
-public Builder addPhones(PhoneNumber value);
-public Builder addAllPhones(Iterable<PhoneNumber> value);
-public Builder clearPhones();
-```
+    ```java
+    // required string name = 1;
+    public boolean hasName();
+    public java.lang.String getName();
+    public Builder setName(String value);
+    public Builder clearName();
+    
+    // required int32 id = 2;
+    public boolean hasId();
+    public int getId();
+    public Builder setId(int value);
+    public Builder clearId();
+    
+    // optional string email = 3;
+    public boolean hasEmail();
+    public String getEmail();
+    public Builder setEmail(String value);
+    public Builder clearEmail();
+    
+    // repeated .tutorial.Person.PhoneNumber phones = 4;
+    public List<PhoneNumber> getPhonesList();
+    public int getPhonesCount();
+    public PhoneNumber getPhones(int index);
+    public Builder setPhones(int index, PhoneNumber value);
+    public Builder addPhones(PhoneNumber value);
+    public Builder addAllPhones(Iterable<PhoneNumber> value);
+    public Builder clearPhones();
+    ```
 
 As you can see, there are simple JavaBeans-style getters and setters for each
 field. There are also `has` getters for each singular field which return true if
