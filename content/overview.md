@@ -218,7 +218,7 @@ std::string email = john.email();
       * `map`
     * nameToGive
       * ⚠️once they are set & used in production -> impossible to change ⚠️
-      * Check 'programmingGuide/style'
+      * Check [Message and Field Names](/programming-guides/style#message-field-names)
       * ⚠️ do NOT use `-` ⚠️
       * if field is repeated -> use pluralized names
     * numberToGive
@@ -234,29 +234,14 @@ std::string email = john.email();
   * [proto2](/programming-guides/proto2)
   * [proto3](/programming-guides/proto3)
 
-* TODO:
-After setting optionality and field type, you choose a name for the field.
-There are some things to keep in mind when setting field names:
-
-*   It can sometimes be difficult, or even impossible, to change field names
-    after they've been used in production.
-*   Field names cannot contain dashes. For more on field name syntax, see
-    [Message and Field Names](/programming-guides/style#message-field-names).
-*   Use pluralized names for repeated fields.
-
-After assigning a name to the field, you assign a field number. Field
-numbers cannot be repurposed or reused. If you delete a field, you should
-reserve its field number to prevent someone from accidentally reusing the
-number.
-
 ## Additional Data Type Support {#data-types}
 
-Protocol buffers support many scalar value types, including integers that use
-both variable-length encoding and fixed sizes. You can also create your own
-composite data types by defining messages that are, themselves, data types that
-you can assign to a field. In addition to the simple and composite value types,
-several [common types](/programming-guides/dos-donts#common)
-are published.
+* many scalar value types
+  * _Example:_ integers
+* create your own composite data types
+  * how?
+    * define messages / are, themselves, data types / you -- can assign to a -- field
+* other [common types](/programming-guides/dos-donts#common)
 
 ## History {#history}
 
@@ -264,18 +249,14 @@ are published.
 
 ## Protocol Buffers Open Source Philosophy {#philosophy}
 
-Protocol buffers were open sourced in 2008 as a way to provide developers
-outside of Google with the same benefits that we derive from them internally. We
-support the open source community through regular updates to the language as we
-make those changes to support our internal requirements. While we accept select
-pull requests from external developers, we cannot always prioritize feature
-requests and bug fixes that don’t conform to Google’s specific needs.
+* open sourced | 2008
+  * Reason: 🧠 provide developers outside of Google / SAME benefits 🧠
+* regular updates to the language
+* accept selected PR -- from -- external developers / 👀priority is ALWAYS Google’s specific needs 👀
 
 ## Developer Community {#community}
 
-To be alerted to upcoming changes in Protocol Buffers and to connect with
-protobuf developers and users,
-[join the Google Group](https://groups.google.com/g/protobuf).
+* [join the Google Group](https://groups.google.com/g/protobuf)
 
 ## Additional Resources {#additional-resources}
 
