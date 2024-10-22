@@ -260,8 +260,7 @@ are published.
 
 ## History {#history}
 
-To read about the history of the protocol buffers project, see
-[History of Protocol Buffers](/history).
+* [History of Protocol Buffers](/history)
 
 ## Protocol Buffers Open Source Philosophy {#philosophy}
 
